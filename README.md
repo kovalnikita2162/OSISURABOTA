@@ -161,3 +161,15 @@ _Z9factoriali:
 #### Лабораторная работа 2: Установка Linux
 
 https://disk.yandex.ru/d/eX_zqxEc24wHBA
+
+## Лабораторная работа 3a — Реализация скрипта Bash
+Вариант 4: Поиск строки в текстовых файлах
+##### Скрипт принимает слово как аргумент командной строки, обходит все .txt файлы в текущей директории, находит файлы содержащие заданное слово и сохраняет их список в list.txt
+### Шаг 1: Создание рабочей папки и файлов
+<img width="1080" height="121" alt="image" src="https://github.com/user-attachments/assets/f241c10b-64bf-4ac0-ab2a-6c32dc1d1582" />
+### Шаг 2: Проверка файлов
+<img width="590" height="42" alt="image" src="https://github.com/user-attachments/assets/85d3cb7c-c940-439e-9ae8-588e8aac161b" />
+### Шаг 3 Скрипт script.sh
+<img width="757" height="371" alt="image" src="https://github.com/user-attachments/assets/f528eec5-2745-4fab-a90b-120f38477dfd" />
+### Шаг 4: Запуск и результат
+<img width="434" height="86" alt="image" src="https://github.com/user-attachments/assets/0a06b17d-90a8-460c-9c5e-1ffea4374b7c" />
