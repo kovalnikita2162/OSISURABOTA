@@ -158,3 +158,6 @@ _Z9factoriali:
 
 <img width="522" height="85" alt="image" src="https://github.com/user-attachments/assets/c47cd5b4-b62a-4099-af47-0766cecf688c" />
 
+#### Лабораторная работа 2: Установка Linux
+
+https://disk.yandex.ru/d/eX_zqxEc24wHBA
