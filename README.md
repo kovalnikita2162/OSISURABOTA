@@ -24,6 +24,7 @@
 
 ### Без оптимизации -O0
 Компилируем в ассемблер без оптимизации:
+##
 .file	"factorial.cpp"
 	.text
 	.globl	_Z9factoriali
@@ -61,6 +62,7 @@ _Z9factoriali:
 	.ident	"GCC: (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0"
 ### С оптимизацией -O3
 Компилятор всё засунул в регистры, цикл оптимизирован.
+##
 .file	"factorial.cpp"
 	.text
 	.p2align 4,,15            // выравнивание кода для быстрого выполнения
@@ -131,4 +133,10 @@ _Z9factoriali:
 
 
 ## 4. Добавляем поток
-![скрин]()
+# обновляем код
+<img width="849" height="713" alt="image" src="https://github.com/user-attachments/assets/4341e8f0-1723-4998-b377-649d31b6b855" />
+# обновляем makefile 
+<img width="500" height="405" alt="image" src="https://github.com/user-attachments/assets/366dbd08-b4d6-46e5-95da-50769171f5b3" />
+# всё собирается
+<img width="522" height="85" alt="image" src="https://github.com/user-attachments/assets/c47cd5b4-b62a-4099-af47-0766cecf688c" />
+
