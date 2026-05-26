@@ -198,10 +198,8 @@ https://disk.yandex.ru/d/eX_zqxEc24wHBA
 ### 3. Разрешаем выполнение скриптов
 
 
-<img width="438" height="40" alt="image" src="https://github.com/user-attachments/assets/24c20e82-108c-47fa-b7f9-3b52364cbda6" />
+<img width="1024" height="124" alt="image" src="https://github.com/user-attachments/assets/cae9bc5d-c54c-4599-8a74-775c39e883da" />
 
-
-<img width="625" height="179" alt="image" src="https://github.com/user-attachments/assets/1be12d8b-672b-452c-83cd-f9ff6a7c023f" />
 
 
 
