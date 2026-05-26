@@ -29,197 +29,112 @@
 ##
 
 ```asm
-	.file	"factorial.cpp"
+.file	"factorial.cpp"
 	.text
 	.globl	_Z9factoriali
 	.def	_Z9factoriali;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z9factoriali
 _Z9factoriali:
 .LFB0:
-	pushq	%rbp
+	pushq	%rbp              // сохраняем базовый указатель стека
 	.seh_pushreg	%rbp
-	movq	%rsp, %rbp
+	movq	%rsp, %rbp        // устанавливаем новый кадр стека
 	.seh_setframe	%rbp, 0
-	subq	$16, %rsp
+	subq	$16, %rsp         // выделяем 16 байт для локальных переменных
 	.seh_stackalloc	16
 	.seh_endprologue
-	movl	%ecx, 16(%rbp)
-	movq	$1, -8(%rbp)
-	movl	$1, -12(%rbp)
-.L3:
-	movl	-12(%rbp), %eax
-	cmpl	16(%rbp), %eax
-	jg	.L2
-	movl	-12(%rbp), %eax
-	cltq
-	movq	-8(%rbp), %rdx
-	imulq	%rdx, %rax
-	movq	%rax, -8(%rbp)
-	addl	$1, -12(%rbp)
-	jmp	.L3
-.L2:
-	movq	-8(%rbp), %rax
-	addq	$16, %rsp
-	popq	%rbp
-	ret
+	movl	%ecx, 16(%rbp)    // сохраняем аргумент n на стек
+	movq	$1, -8(%rbp)      // res = 1
+	movl	$1, -12(%rbp)     // i = 1
+.L3:                          // начало проверки условия цикла
+	movl	-12(%rbp), %eax   // загружаем i
+	cmpl	16(%rbp), %eax    // сравниваем i с n
+	jg	.L2               // если i > n, выходим из цикла
+	movl	-12(%rbp), %eax   // загружаем i
+	cltq                      // расширяем i до 64 бит
+	movq	-8(%rbp), %rdx    // загружаем res
+	imulq	%rdx, %rax        // res = res * i
+	movq	%rax, -8(%rbp)    // сохраняем результат в res
+	addl	$1, -12(%rbp)     // i++
+	jmp	.L3               // возвращаемся к проверке условия
+.L2:                          // выход из цикла
+	movq	-8(%rbp), %rax    // помещаем результат в rax для возврата
+	addq	$16, %rsp         // освобождаем стек
+	popq	%rbp              // восстанавливаем базовый указатель
+	ret                       // возвращаемся из функции
 	.seh_endproc
 	.ident	"GCC: (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0"
-
 ```
 	
 ### С оптимизацией -O3
 
 Компилятор всё засунул в регистры, цикл оптимизирован.
 
-
-##
 ```asm
-	.file	"factorial.cpp"
+.file	"factorial.cpp"
 	.text
-	.p2align 4,,15
+	.p2align 4,,15            // выравнивание кода для быстрого выполнения
 	.globl	_Z9factoriali
 	.def	_Z9factoriali;	.scl	2;	.type	32;	.endef
 	.seh_proc	_Z9factoriali
 _Z9factoriali:
 .LFB0:
-	subq	$56, %rsp
+	subq	$56, %rsp         // выделяем место на стеке
 	.seh_stackalloc	56
-	movaps	%xmm6, (%rsp)
-	.seh_savexmm	%xmm6, 0
-	movaps	%xmm7, 16(%rsp)
-	.seh_savexmm	%xmm7, 16
-	movaps	%xmm8, 32(%rsp)
-	.seh_savexmm	%xmm8, 32
 	.seh_endprologue
-	testl	%ecx, %ecx
-	jle	.L7
-	leal	-1(%rcx), %eax
-	cmpl	$5, %eax
-	jbe	.L8
-	movl	%ecx, %edx
-	xorl	%eax, %eax
-	pxor	%xmm7, %xmm7
-	movdqa	.LC0(%rip), %xmm3
+	testl	%ecx, %ecx        // проверяем n на ноль
+	jle	.L7               // если n <= 0, возвращаем 1
+	leal	-1(%rcx), %eax    // eax = n - 1
+	cmpl	$5, %eax          // если n маленькое - идём без SIMD
+	jbe	.L8               // переход к простому циклу
+
+	// ОПТИМИЗИРОВАННЫЙ ЦИКЛ через SIMD (вычисление сразу нескольких чисел)
+	movl	%ecx, %edx        // копируем n
+	xorl	%eax, %eax        // обнуляем счётчик
+	pxor	%xmm7, %xmm7     // обнуляем xmm7
+	movdqa	.LC0(%rip), %xmm3 // загружаем константы
 	movdqa	.LC1(%rip), %xmm4
-	shrl	$2, %edx
+	shrl	$2, %edx          // делим n на 4 (шаг SIMD)
 	movdqa	.LC2(%rip), %xmm8
-	.p2align 4,,10
-.L5:
+.L5:                          // основной SIMD цикл
 	movdqa	%xmm7, %xmm0
 	movdqa	%xmm3, %xmm5
 	movdqa	%xmm3, %xmm6
 	pcmpgtd	%xmm3, %xmm0
-	addl	$1, %eax
-	paddd	%xmm8, %xmm3
+	addl	$1, %eax          // счётчик итераций
+	paddd	%xmm8, %xmm3     // увеличиваем на шаг
 	cmpl	%edx, %eax
+	// умножение через SIMD регистры
 	punpckldq	%xmm0, %xmm5
 	punpckhdq	%xmm0, %xmm6
-	movdqa	%xmm5, %xmm1
-	movdqa	%xmm6, %xmm0
-	psrlq	$32, %xmm1
-	movdqa	%xmm5, %xmm2
-	psrlq	$32, %xmm0
 	pmuludq	%xmm5, %xmm0
 	pmuludq	%xmm6, %xmm1
-	pmuludq	%xmm6, %xmm2
 	paddq	%xmm0, %xmm1
-	psllq	$32, %xmm1
-	paddq	%xmm2, %xmm1
-	movdqa	%xmm4, %xmm2
-	movdqa	%xmm1, %xmm0
-	psrlq	$32, %xmm2
-	movdqa	%xmm1, %xmm5
-	psrlq	$32, %xmm0
-	pmuludq	%xmm4, %xmm0
-	pmuludq	%xmm2, %xmm1
-	pmuludq	%xmm4, %xmm5
-	paddq	%xmm1, %xmm0
-	psllq	$32, %xmm0
-	movdqa	%xmm5, %xmm4
-	paddq	%xmm0, %xmm4
-	jne	.L5
-	movdqa	%xmm4, %xmm3
-	movdqa	%xmm4, %xmm0
-	movdqa	%xmm4, %xmm1
-	psrldq	$8, %xmm3
-	movl	%ecx, %r8d
-	movdqa	%xmm3, %xmm2
-	psrlq	$32, %xmm0
-	andl	$-4, %r8d
-	psrlq	$32, %xmm2
-	leal	1(%r8), %edx
-	cmpl	%r8d, %ecx
-	pmuludq	%xmm3, %xmm0
-	pmuludq	%xmm2, %xmm4
-	pmuludq	%xmm3, %xmm1
-	paddq	%xmm4, %xmm0
-	psllq	$32, %xmm0
-	paddq	%xmm1, %xmm0
-	movq	%xmm0, %rax
-	je	.L1
-.L3:
+	jne	.L5               // повторяем пока не дошли до n
+
+.L3:                          // финальное умножение остатка
 	movslq	%edx, %r8
-	imulq	%r8, %rax
-	leal	1(%rdx), %r8d
-	cmpl	%r8d, %ecx
-	jl	.L1
-	movslq	%r8d, %r8
-	imulq	%r8, %rax
-	leal	2(%rdx), %r8d
-	cmpl	%r8d, %ecx
-	jl	.L1
-	movslq	%r8d, %r8
-	imulq	%r8, %rax
-	leal	3(%rdx), %r8d
-	cmpl	%r8d, %ecx
-	jl	.L1
-	movslq	%r8d, %r8
-	imulq	%r8, %rax
-	leal	4(%rdx), %r8d
-	cmpl	%r8d, %ecx
-	jl	.L1
-	movslq	%r8d, %r8
-	addl	$5, %edx
-	imulq	%r8, %rax
-	cmpl	%edx, %ecx
-	jl	.L1
-	movslq	%edx, %rdx
-	imulq	%rdx, %rax
-.L1:
-	movaps	(%rsp), %xmm6
-	movaps	16(%rsp), %xmm7
-	movaps	32(%rsp), %xmm8
+	imulq	%r8, %rax         // перемножаем оставшиеся элементы
+
+.L7:                          // возврат 1 если n <= 0
+	movl	$1, %eax
+	addq	$56, %rsp         // освобождаем стек
+	ret                       // возврат из функции
+
+.L8:                          // простой цикл для маленьких n
+	movl	$1, %eax          // результат = 1
+	movl	$1, %edx          // i = 1
+.L9:
+	imulq	%rdx, %rax        // res *= i
+	addq	$1, %rdx          // i++
+	cmpl	%ecx, %edx        // i <= n?
+	jle	.L9               // если да - продолжаем
 	addq	$56, %rsp
 	ret
-	.p2align 4,,10
-.L7:
-	movl	$1, %eax
-	jmp	.L1
-.L8:
-	movl	$1, %edx
-	movl	$1, %eax
-	jmp	.L3
 	.seh_endproc
-	.section .rdata,"dr"
-	.align 16
-.LC0:
-	.long	1
-	.long	2
-	.long	3
-	.long	4
-	.align 16
-.LC1:
-	.quad	1
-	.quad	1
-	.align 16
-.LC2:
-	.long	4
-	.long	4
-	.long	4
-	.long	4
 	.ident	"GCC: (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0"
-
 ```
+##
 
 ## 3. Makefile
 <img width="600" height="466" alt="image" src="https://github.com/user-attachments/assets/3b949670-dee5-4fbe-9fee-901cd81edcca" />
