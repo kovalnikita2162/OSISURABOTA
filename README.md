@@ -181,3 +181,33 @@ https://disk.yandex.ru/d/eX_zqxEc24wHBA
 ### Шаг 4: Запуск и результат
 
 <img width="434" height="86" alt="image" src="https://github.com/user-attachments/assets/0a06b17d-90a8-460c-9c5e-1ffea4374b7c" />
+
+## Лабораторная работа 3b
+### PowerShell скрипт — поиск строки в .txt файлах
+
+**Вариант 4:** то же задание но на Windows PowerShell.
+
+### 1. Создаём папку и тестовые файлы
+<img width="469" height="109" alt="image" src="https://github.com/user-attachments/assets/d55474e2-2c1b-45dc-a1f8-8b32dc30b433" />
+
+
+### 2. Создаём скрипт
+<img width="625" height="179" alt="image" src="https://github.com/user-attachments/assets/48d71f8d-aa44-4d85-842b-0949bfb16a47" />
+
+
+### 3. Разрешаем выполнение скриптов
+
+
+<img width="438" height="40" alt="image" src="https://github.com/user-attachments/assets/24c20e82-108c-47fa-b7f9-3b52364cbda6" />
+
+
+<img width="625" height="179" alt="image" src="https://github.com/user-attachments/assets/1be12d8b-672b-452c-83cd-f9ff6a7c023f" />
+
+
+
+### 4. Запускаем скрипт и смотрим результат
+
+<img width="476" height="86" alt="image" src="https://github.com/user-attachments/assets/0734fcc4-c70b-4bc8-a10e-18676c55d281" />
+
+
+<img width="936" height="219" alt="image" src="https://github.com/user-attachments/assets/335b7af2-d265-4e9c-84b0-28e41130479c" />
