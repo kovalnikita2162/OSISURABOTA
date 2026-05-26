@@ -146,15 +146,15 @@ _Z9factoriali:
 
 ## 4. Добавляем поток
 
-# обновляем код
+## обновляем код
 
 <img width="849" height="713" alt="image" src="https://github.com/user-attachments/assets/4341e8f0-1723-4998-b377-649d31b6b855" />
 
-# обновляем makefile 
+## обновляем makefile 
 
 <img width="500" height="405" alt="image" src="https://github.com/user-attachments/assets/366dbd08-b4d6-46e5-95da-50769171f5b3" />
 
-# всё собирается
+## всё собирается
 
 <img width="522" height="85" alt="image" src="https://github.com/user-attachments/assets/c47cd5b4-b62a-4099-af47-0766cecf688c" />
 
